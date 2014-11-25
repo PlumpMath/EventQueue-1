@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>event queue</title>
+</head>
+<body>
+    <script src="../js/event-queue.js"></script>
+    <script>
+
+        window.onload = function () {
+
+            window.eq = new EventQueue()
+                .queueEvent('something', 5)
+                .addCallback(function () {
+                    console.log('This is a callback for when all events have resolved.');
+                })
+                .build();
+
+            window.eq.triggerEvent('something')
+                .triggerEvent('something')
+                .triggerEvent('something')
+                .triggerEvent('something')
+                .triggerEvent('something');
+
+        }
+
+    </script>
+</body>
+</html>
