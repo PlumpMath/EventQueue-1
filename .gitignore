@@ -1,2 +1,3 @@
 *.swp
 docs/*
+node_modules/*

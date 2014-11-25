@@ -235,8 +235,7 @@ EventQueue.prototype._pollProgress = function (event) {
     this._events.splice(index, 1);
     this._completedEvents.push(event.detail.name);
     if (this._completedEvents.length === this._targetCount) {
-        this._callback();
-        this.reset();
+        this._success();
     }
 };
 
@@ -274,6 +273,7 @@ EventQueue.prototype._success = function () {
     'use strict';
     this._destroyListeners();
     this._callback();
+    this.reset();
     return this;
 };
 
