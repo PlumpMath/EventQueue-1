@@ -86,40 +86,31 @@ describe('EventQueue', function () {
             eq.triggerEvent('name');
             assert(eq._completedEvents.length === 1);
         });
-        it('should throw an error if a non-queued event is triggered', function () {
-            var eq = new EventQueue()
-                .queueEvent('name', 2)
-                .build();
-            assert.throws(eq.triggerEvent('broken'), Error);
-        });
-        it('should throw an error if the queue has not been built', function () {
-            var eq = new EventQueue()
-                .queueEvent('name', 2);
-            assert.throws(eq.triggerEvent('name'), Error);
-        });
     });
 
     describe('#build()', function () {
         it('should build the queue and create the listeners', function () {
-        
-        });
-        it('should throw an error if no events are queued', function () {
-        
-        });
-        it('should throw an error if the queue is already built', function () {
-            
+            var eq = new EventQueue()
+                .queueEvent('name', 4)
+                .build();
+            assert(eq._targetCount === 4);
+            assert(eq._events.length === 4);
+            assert(eq._queue.length === 0);
+            assert(eq._hasBuilt);
         });
     });
 
     describe('#_buildListeners()', function () {
         it('should add a listener to the body with the randomly generated id', function () {
-        
+            var eq = new EventQueue()
+                .queueEvent('name', 4)
+                .build();
         });
     });
 
     describe('#_pollProgress()', function () {
         it('should move an event to the completed events', function () {
-        
+            
         });
         it('should move to the success method on queue completion', function () {
         
@@ -133,9 +124,6 @@ describe('EventQueue', function () {
     });
 
     describe('#_success()', function () {
-        it('should destroy listeners', function () {
-        
-        });
         it('should run the callback function', function () {
         
         });
@@ -145,9 +133,6 @@ describe('EventQueue', function () {
     });
 
     describe('#_failure()', function () {
-        it('should destroy existing event listeners', function () {
-        
-        });
         it('should throw an error with the supplied message', function () {
         
         });
