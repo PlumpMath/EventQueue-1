@@ -86,6 +86,21 @@ describe('EventQueue', function () {
             eq.triggerEvent('name');
             assert(eq._completedEvents.length === 1);
         });
+        it('should throw an error if no events found with supplied name', function () {
+            var eq = new EventQueue()
+                .queueEvent('name')
+                .build();
+            assert.throws(function () {
+                eq.triggerEvent('othername');
+            }, Error);
+        });
+        it('should throw an error if the queue is not built yet', function () {
+            var eq = new EventQueue()
+                .queueEvent('name');
+            assert.throws(function () {
+                eq.triggerEvent('name');
+            }, Error);
+        });
     });
 
     describe('#build()', function () {
@@ -98,43 +113,88 @@ describe('EventQueue', function () {
             assert(eq._queue.length === 0);
             assert(eq._hasBuilt);
         });
+        it('should throw an error if no events are queued', function () {
+            var eq = new EventQueue();
+            assert.throws(function () {
+                eq.build();
+            }, Error);
+        });
+        it('should throw an error if the queue has already been built', function () {
+            var eq = new EventQueue()
+                .queueEvent('name')
+                .build();
+            assert.throws(function () {
+                eq.build();
+            }, Error);
+        });
     });
 
     describe('#_buildListeners()', function () {
-        it('should add a listener to the body with the randomly generated id', function () {
-            var eq = new EventQueue()
-                .queueEvent('name', 4)
-                .build();
-        });
+        // It should, but hey, let's see you check for
+        // events on an arbitrary DOM node!
+        it('should add a listener to the body with the randomly generated id');
     });
 
     describe('#_pollProgress()', function () {
         it('should move an event to the completed events', function () {
-            
+            var eq = new EventQueue()
+                .queueEvent('name', 4)
+                .build()
+                .triggerEvent('name');
+            assert(eq._completedEvents.length > 0);
         });
         it('should move to the success method on queue completion', function () {
-        
+            var eq_output = '';
+            var eq = new EventQueue()
+                .queueEvent('name')
+                .addCallback(function () {
+                    eq_output = 'completed';
+                })
+                .build()
+                .triggerEvent('name');
+            assert.equal(eq_output, 'completed');
         });
     });
 
     describe('#_destroyListeners()', function () {
-        it('should remove listeners from the document', function () {
-        
-        });
+        // Yes, yes it should, but hey, see above hell associated
+        // with retrieving bound events on a DOM node!
+        it('should remove listeners from the document');
     });
 
     describe('#_success()', function () {
         it('should run the callback function', function () {
-        
+            var eq_output = '';
+            var eq = new EventQueue()
+                .queueEvent('name')
+                .addCallback(function () {
+                    eq_output = 'completed';
+                })
+                .build()
+                .triggerEvent('name');
+            assert.equal(eq_output, 'completed');
         });
         it('should reset the event queue', function () {
-        
+            var eq = new EventQueue();
+            var eq2 = new EventQueue()
+                .queueEvent('name')
+                .addCallback(function () {
+                    return 'something';
+                })
+                .build()
+                .triggerEvent('name');
+            assert.deepEqual(eq._queue, eq2._queue);
+            assert.deepEqual(eq._events, eq2._events);
+            assert.deepEqual(eq._completedEvents, eq2._completedEvents);
+            assert.deepEqual(eq._hasBuilt, eq2._hasBuilt);
+            assert.deepEqual(eq._targetCount, eq2._targetCount);
         });
     });
 
     describe('#_failure()', function () {
         it('should throw an error with the supplied message', function () {
-        
+            var eq = new EventQueue();
+            assert.throws(eq._failure, Error);
         });
     });
 
